@@ -1,7 +1,9 @@
 
-requires [pecs](https://github.com/jesstelford/pecs)
+# dependecies
+- [pecs](https://github.com/jesstelford/pecs)
+    - for tests: `/pecs/pecs.lua`
 
-some details:
+# details
 - square brackets means `nil`able
 
 # classes
@@ -43,3 +45,21 @@ Creates a new sprite object
 Draws the sprite
 - x, y: draw at x and y using the x and y properties as offset
     - default: do not draw at x and y
+
+# Components
+
+## `getComponents(world)`
+Creates components and returns a table containing them
+- world: pecs world
+
+## `Position`
+coordinates of character
+
+### `newPosition(x, y)`
+- same as Position class
+
+## `Sprite`
+
+### `newSprite(index, x, y, [w, h, flip_x, flip_y])`
+- same as Sprite class
+    - x and y default to -4 to auto center
