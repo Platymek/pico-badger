@@ -78,13 +78,14 @@ end
 function getComponents(w)
 
 	local c = {}
+	c.new = {}
 
 
 	-- position
 
 	c.Position = w.component(Position:new(0, 0))
 
-	function c.newPosition(x, y)
+	function c.new.Position(x, y)
 
 		local p = Position:new(x, y)
 		local pos = c.Position(p)
@@ -102,7 +103,7 @@ function getComponents(w)
 
 	c.Sprite = w.component(Sprite:new(0, 0))
 
-	function c.newSprite(index, x, y, w, h, flip_x, flip_y)
+	function c.new.Sprite(index, x, y, w, h, flip_x, flip_y)
 
 		local s = Sprite:new(index, (x or -4), (x or -4), w, h, flip_x, flip_y)
 		local spr = c.Sprite(s)
@@ -111,6 +112,15 @@ function getComponents(w)
 		s.__index = s
 
 		return spr
+	end
+
+
+	c.SpriteGroup = w.component({})
+
+	function c.new.SpriteGroup(...)
+
+		local sg = c.SpriteGroup({...})
+		return sg
 	end
 
 
@@ -123,6 +133,26 @@ function getComponents(w)
 		local pos = e[c.Position]
 		e[c.Sprite]:draw(0, 0)
 	end)
+
+
+	c.SpriteGroupSystem = w.system({c.SpriteGroup, c.Position},
+	
+	function(e)
+	
+		local pos = e[c.Position]
+		local sg  = e[c.SpriteGroup]
+
+		for _, s in ipairs(sg) do
+
+			s:draw(pos.x, pos.y)
+		end
+	end)
+
+	function c.GraphicsSystem()
+
+		c.SpriteSystem()
+		c.SpriteGroupSystem()
+	end
 
 
 	return c
