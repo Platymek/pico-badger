@@ -63,7 +63,10 @@ end
 
 function Rectangle:draw(colour, x, y)
 
-	rect(self.x + (x or 0), self.y + (y or 0), self.w, self.h, (colour or 7))
+	local x1 = self.x + (x or 0) + 1
+	local y1 = self.y + (y or 0) + 1
+
+	rect(x1, y1, x1 + self.w - 3, y1 + self.h - 3, (colour or 7))
 end
 
 function Rectangle:isIntersecting(r)
@@ -179,10 +182,11 @@ function getComponents(w)
 
 	c.Collision = w.component()
 
-	function c.new.Collision(x, y, w, h)
+	function c.new.Collision(onCollide, x, y, w, h)
 		
 		local r = Rectangle:new(x or -4, y or -4, w or 8, h or 8)
 		local col = c.Collision(r)
+		col.onCollide = onCollide
 
 		setmetatable(col, r)
 		r.__index = r
@@ -265,7 +269,7 @@ function getComponents(w)
 	-- -- physics
 	
 	-- helper function for velocity system
-	local function velCheck(pos, col, vel, isSolid, checkY)
+	local function velCheck(ent, pos, col, vel, isSolid, checkY)
 
 		local startPos = flr(checkY and pos.y or pos.x)
 		local endPos = flr(checkY and pos.y + vel.y or pos.x + vel.x)
@@ -278,17 +282,15 @@ function getComponents(w)
 				local newPos = checkY and 
 					Position:new(pos.x, i) or 
 					Position:new(i, pos.y)
-
-				print(newPos.y)
 			
 				local polarVel = checkY and 
 					Position:new(0, vel.y) or 
 					Position:new(vel.x, 0) 
 			
-				if isSolid(newPos, polarVel, col) then
-
-					return { 
-						new = checkY and newPos.y or newPos.x,
+				if isSolid(ent, newPos, polarVel, col) then
+					
+					return {
+						new = (checkY and newPos.y or newPos.x) - step,
 						collision = true }
 				end
 			end
@@ -318,14 +320,18 @@ function getComponents(w)
 			return nil
 		end
 
-		local xCol = velCheck(pos, col, dtVel, isSolid, false)
-		local yCol = velCheck(pos, col, dtVel, isSolid, true)
+		local xCol = velCheck(e, pos, col, dtVel, isSolid, false)
+		local yCol = velCheck(e, pos, col, dtVel, isSolid, true)
 
-		if xCol.collision then vel.x = 0 end
-		if yCol.collision then vel.y = 0 end
+		if xCol.collision then 
 
-		if yCol.collision then googoo = yCol.new end
-		--print(googoo)
+			if col.onCollide then col.onCollide(Position:new(vel.x, 0)) end
+		end
+
+		if yCol.collision then 
+
+			if col.onCollide then col.onCollide(Position:new(0, vel.y)) end
+		end
 
 		pos.x = xCol.new
 		pos.y = yCol.new

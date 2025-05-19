@@ -133,7 +133,7 @@ inherits from `Rectangle`.
 
 `new.Collision([onCollide, x, y, w, h])`
 - `onCollide`: calls this function or list of functions when colliding. Has the following parameters:
-    - `vel`: velocity as a `Position` object
+    - `dir`: direction as a `Position` object. Usually the value of velocity polarised in the direction the specific collision was
 - `x`, `y`, `w`, `h`: rectangle properties of collision
     - default: a 8x8, centered rectangle
 
@@ -155,12 +155,14 @@ deletes all entities with Delete component
 
 
 ## `PhysicsSystem(dt, isSolid)`
-calls the following systems:
 - `dt`: delta time
 - `isSolid`: custom function placed in the velocity system to check for solid somethings. Parameters:
+    - `ent`: the entity that is colliding
     - `pos`: position
     - `vel`: velocity
     - `rect`: rectangle of collision
+    
+calls the following systems:
 
 ### `GravitySystem(dt)`
 applies gravity
