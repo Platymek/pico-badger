@@ -292,11 +292,11 @@ function getComponents(w)
 	end
 
 
-	function c.GraphicsSystem()
+	function c.GraphicsSystem(getFocus)
 
 		c.SpriteSystem()
 		c.SpriteGroupSystem()
-		c.CameraSystem()
+		c.CameraSystem(getFocus)
 	end
 
 

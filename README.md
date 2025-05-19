@@ -146,7 +146,8 @@ inherits from `Rectangle`.
 
 # Systems
 
-## `GraphicsSystem()`
+## `GraphicsSystem(getFocus)`
+- `getFocus`: function for camera
 calls the following systems:
 
 ### `SpriteSystem()`
