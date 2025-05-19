@@ -6,6 +6,13 @@
 # details
 - square brackets means `nil`able
 
+# Functions
+
+## `call(funcs)`
+calls a function or a list of function, checking type
+- `funcs`: a function or a table of functions
+
+
 # classes
 
 ## Position
@@ -81,6 +88,14 @@ group of sprites which are all drawn at once
 `new.SpriteGroup(...)`
 - variadic function where all parameters are sprites
 
+## `Delete`
+queues deletion of a character
+
+`new.Delete(onDelete)`
+- onDelete: can be
+    - a function called when deleted
+    - an array of functions all called when deleted
+
 
 # Systems
 
@@ -92,3 +107,6 @@ draws all sprites
 
 ### `SpriteGroupSystem()`
 draws all sprite groups
+
+### `DeleteSystem()`
+deletes all entities with Delete component

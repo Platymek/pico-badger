@@ -1,4 +1,20 @@
 
+-- functions
+
+function call(funcs)
+
+	if type(funcs) == "function" then
+
+		funcs()
+	else
+		for _, f in ipairs(funcs) do
+
+			f()
+		end
+	end
+end
+
+
 -- classes
 
 
@@ -124,14 +140,27 @@ function getComponents(w)
 	end
 
 
+	-- delete
+
+	c.Delete = w.component({onDelete = nil})
+
+	function c.new.Delete(onDelete)
+
+		return c.Delete({onDelete = onDelete})
+	end
+
+
 	-- -- systems
+
+
+	-- -- -- graphics
 
 	c.SpriteSystem = w.system({c.Sprite, c.Position},
 	
 	function(e)
 	
 		local pos = e[c.Position]
-		e[c.Sprite]:draw(0, 0)
+		e[c.Sprite]:draw(pos.x, pos.y)
 	end)
 
 
@@ -153,6 +182,16 @@ function getComponents(w)
 		c.SpriteSystem()
 		c.SpriteGroupSystem()
 	end
+
+	-- -- -- delete
+
+	c.DeleteSystem = w.system({c.Delete},
+
+	function (e)
+		
+		--call(e[c.Delete].onDelete)
+		w.queue(function() w.remove(e) end)
+	end)
 
 
 	return c
