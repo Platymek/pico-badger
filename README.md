@@ -12,6 +12,9 @@
 calls a function or a list of function, checking type
 - `funcs`: a function or a table of functions
 
+## `moveToward(from, to, delta)`
+interpolates a value linearly, from `from` to `to`, with a change of `delta`
+
 
 # classes
 
@@ -69,11 +72,13 @@ e += c.new.Sprite(4)
 Creates components and returns a table containing them
 - world: pecs world
 
+
 ## `Position`
-coordinates of character
+coordinates of entity
 
 `new.Position(x, y)`
 - x, y: coordinates
+
 
 ## `Sprite`
 sprite
@@ -88,13 +93,31 @@ group of sprites which are all drawn at once
 `new.SpriteGroup(...)`
 - variadic function where all parameters are sprites
 
+
 ## `Delete`
-queues deletion of a character
+queues deletion of the entity
 
 `new.Delete(onDelete)`
 - onDelete: can be
     - a function called when deleted
     - an array of functions all called when deleted
+
+
+## `Physics`
+
+### `Velocity`
+allows movement of the entity
+
+`new.Velocity([x, y])`
+- x, y coordinates
+    - default: 0
+
+### `Gravity`
+applies gravity to the velocity component
+
+`new.Gravity(str, lim)`
+- str: strength of gravity
+- lim: limit of gravity
 
 
 # Systems
@@ -108,5 +131,22 @@ draws all sprites
 ### `SpriteGroupSystem()`
 draws all sprite groups
 
-### `DeleteSystem()`
+
+## `DeleteSystem()`
 deletes all entities with Delete component
+
+
+## `PhysicsSystem(dt, isSolid)`
+calls the following systems:
+- `dt`: delta time
+- `isSolid`: custom function placed in the velocity system to check for solid somethings. Parameters:
+    - `pos`: position
+    - `vel`: velocity
+    - `rect`: rectangle of collision
+
+### `GravitySystem(dt)`
+applies gravity
+
+### `VelocitySystem(dt, [isSolid])`
+applies velocity
+- `isSolid`: can be `nil`

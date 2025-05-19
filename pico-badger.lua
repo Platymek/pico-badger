@@ -14,6 +14,12 @@ function call(funcs)
 	end
 end
 
+function moveToward(from, to, delta)
+
+    if abs(to - from) <= delta then return to end
+    return from + sgn(to - from) * delta
+end
+
 
 -- classes
 
@@ -150,10 +156,54 @@ function getComponents(w)
 	end
 
 
-	-- -- systems
+	-- physics
+
+	-- -- collision
+
+	c.Collision = w.component()
+
+	function c.new.Collision(x, y, w, h)
+		
+		local r = Rectangle:new(x or -4, y or -4, w or 8, h or 8)
+		local col = c.Collision(r)
+
+		setmetatable(col, r)
+		r.__index = r
+
+		return col
+	end
 
 
-	-- -- -- graphics
+	-- -- velocity
+
+	c.Velocity = w.component()
+
+	function c.new.Velocity(x, y)
+		
+		local v = Position:new(x or 0, y or 0)
+		local vel = c.Velocity(v)
+		vel.onFloor = false
+
+		setmetatable(vel, v)
+		v.__index = v
+
+		return vel
+	end
+
+
+	-- -- gravity
+
+	c.Gravity = w.component()
+
+	function c.new.Gravity(str, lim)
+
+		return c.Gravity({str = str, lim = lim})
+	end
+
+
+	-- systems
+
+	-- -- graphics
 
 	c.SpriteSystem = w.system({c.Sprite, c.Position},
 	
@@ -183,15 +233,102 @@ function getComponents(w)
 		c.SpriteGroupSystem()
 	end
 
-	-- -- -- delete
+
+	-- -- delete
 
 	c.DeleteSystem = w.system({c.Delete},
 
 	function (e)
 		
-		--call(e[c.Delete].onDelete)
+		call(e[c.Delete].onDelete)
 		w.queue(function() w.remove(e) end)
 	end)
+
+
+	-- -- physics
+	
+	-- helper function for velocity system
+	local function velCheck(pos, col, vel, isSolid, checkY)
+
+		local startPos = flr(checkY and pos.y or pos.x)
+		local endPos = flr(checkY and pos.y + vel.y or pos.x + vel.x)
+		local step = sgn(endPos - startPos)
+
+		-- if pixel difference, check each pixel
+		if startPos != endPos then
+			for i = startPos, endPos, step do
+			
+				local newPos = checkY and 
+					Position:new(pos.x, i) or 
+					Position:new(i, pos.y)
+
+				print(newPos.y)
+			
+				local polarVel = checkY and 
+					Position:new(0, vel.y) or 
+					Position:new(vel.x, 0) 
+			
+				if isSolid(newPos, polarVel, col) then
+
+					return { 
+						new = checkY and newPos.y or newPos.x,
+						collision = true }
+				end
+			end
+		end
+
+		return {
+			new = checkY and pos.y + vel.y or pos.x + vel.x,
+			collision = false }
+	end
+
+	local googoo = 0
+
+	c.VelocitySystem = w.system({c.Velocity, c.Position},
+
+	function (e, dt, isSolid)
+		
+		local pos = e[c.Position]
+		local vel = e[c.Velocity]
+		local col = e[c.Collision]
+
+		local dtVel = Position:new(vel.x * dt, vel.y * dt)
+
+		if not col or not isSolid then
+
+			pos.x += dtVel.x
+			pos.y += dtVel.y
+			return nil
+		end
+
+		local xCol = velCheck(pos, col, dtVel, isSolid, false)
+		local yCol = velCheck(pos, col, dtVel, isSolid, true)
+
+		if xCol.collision then vel.x = 0 end
+		if yCol.collision then vel.y = 0 end
+
+		if yCol.collision then googoo = yCol.new end
+		--print(googoo)
+
+		pos.x = xCol.new
+		pos.y = yCol.new
+	end)
+
+	c.GravitySystem = w.system({c.Gravity, c.Velocity},
+
+	function (e, dt)
+		
+		local g = e[c.Gravity]
+		local v = e[c.Velocity]
+
+		v.y = moveToward(v.y, g.lim, g.str * dt)
+	end)
+
+	function c.PhysicsSystem(dt, isSolid)
+
+		c.GravitySystem(dt)
+		c.VelocitySystem(dt, isSolid)
+	end
 
 
 	return c

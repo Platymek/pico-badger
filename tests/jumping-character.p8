@@ -7,23 +7,40 @@ __lua__
 local w = pecs()
 c = getComponents(w)
 
-local e = w.entity()
-e += c.new.Position(64, 32)
-e += c.new.Sprite(0)
+local s = w.entity()
+s += c.new.Position(16, 16)
+s += c.new.Sprite(0)
 
-local e = w.entity()
-e += c.new.Position(32, 32)
-e += c.new.SpriteGroup(
+local function isSolidFunction(pos, vel, col)
 
-    Sprite:new(16, 0, 0),
-    Sprite:new(17, 8, 0),
-    Sprite:new(32, 0, 8),
-    Sprite:new(33, 8, 8)
-)
+    return pos.y + col.y + col.h > 128
+end
+
+local function createCharacter(x, y, startVelocity)
+
+    local e = w.entity()
+    e += c.new.Position(x, y)
+    e += c.new.Velocity(0, startVelocity or 0)
+    e += c.new.Collision(-8, -8, 16, 16)
+    e += c.new.Gravity(32, 64)
+    e += c.new.SpriteGroup(
+
+        Sprite:new(16, 0, 0),
+        Sprite:new(17, 8, 0),
+        Sprite:new(32, 0, 8),
+        Sprite:new(33, 8, 8)
+    )
+
+    return e
+end
+
+createCharacter(32, 64)
+--createCharacter(64, 64 + 32, -64)
 
 function _update60()
 
     w.update()
+    print(1)
 end
 
 function _draw()
@@ -31,6 +48,7 @@ function _draw()
     cls()
 
     c.GraphicsSystem()
+    c.PhysicsSystem(1/60, isSolidFunction)
 end
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
