@@ -58,12 +58,29 @@ end
 function Rectangle:getOffset(x, y)
 
 	return Rectangle:new(
-	self.x + x, self.y + y, self.w, self.h)
+	self.x + (x or 0), self.y + (y or 0), self.w, self.h)
 end
 
 function Rectangle:draw(colour, x, y)
 
-	rect(self.x + (x or 0), self.y + (y or 0), self.w, self.h, colour)
+	rect(self.x + (x or 0), self.y + (y or 0), self.w, self.h, (colour or 7))
+end
+
+function Rectangle:isIntersecting(r)
+
+	local ax1 = self.x
+	local ax2 = ax1 + self.w
+	local ay1 = self.y
+	local ay2 = ay1 + self.h
+
+	local bx1 = r.x
+	local bx2 = bx1 + r.w
+	local by1 = r.y
+	local by2 = by1 + r.h
+
+	return not (
+		ax2 <= bx1 or bx2 <= ax1
+    or  ay2 <= by1 or by2 <= ay1)
 end
 
 

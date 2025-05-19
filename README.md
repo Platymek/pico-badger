@@ -34,9 +34,16 @@ creates a new rectangle object
 - w, h: dimensions of rectangle
 
 ### `:draw(colour, [x, y])`
-Draws the rectangle outline
+draws the rectangle outline
 - x, y: draw at x and y using the x and y properties as offset
     - default: do not draw at x and y
+
+### `:getOffset(x, y)`
+returns a new rectangle at the offset
+
+### `:isIntersecting(r)`
+checks if this rectangle and another are intersecting
+- `r`: other rectangle
 
 
 ## Sprite
@@ -112,12 +119,23 @@ allows movement of the entity
 - x, y coordinates
     - default: 0
 
+
 ### `Gravity`
 applies gravity to the velocity component
 
 `new.Gravity(str, lim)`
 - str: strength of gravity
 - lim: limit of gravity
+
+
+### `Collision`
+inherits from `Rectangle`.
+
+`new.Collision([onCollide, x, y, w, h])`
+- `onCollide`: calls this function or list of functions when colliding. Has the following parameters:
+    - `vel`: velocity as a `Position` object
+- `x`, `y`, `w`, `h`: rectangle properties of collision
+    - default: a 8x8, centered rectangle
 
 
 # Systems

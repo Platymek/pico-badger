@@ -5,7 +5,8 @@ __lua__
 
 p    = Position :new(16, 13)
 r    = Rectangle:new(0, 0, 16, 16)
-rOff = r  :getOffset(4, 4)
+rOff1= r:getOffset(4, 4)
+rOff2= r:getOffset(32, 32)
 
 assert(p.x == 16)
 assert(p.y == 13)
@@ -15,10 +16,16 @@ assert(r.y == 0)
 assert(r.w == 16)
 assert(r.h == 16)
 
-assert(rOff.x == 4)
-assert(rOff.y == 4)
-assert(rOff.w == 16)
-assert(rOff.h == 16)
+assert(rOff1.x == 4)
+assert(rOff1.y == 4)
+assert(rOff1.w == 16)
+assert(rOff1.h == 16)
+
+assert(rOff2.x == 32)
+assert(rOff2.y == 32)
+
+assert(r:isIntersecting(rOff1))
+assert(not r:isIntersecting(rOff2))
 
 print("everything\'s working!:D")
 __gfx__
