@@ -63,10 +63,10 @@ end
 
 function Rectangle:draw(colour, x, y)
 
-	local x1 = self.x + (x or 0) + 1
-	local y1 = self.y + (y or 0) + 1
+	local x1 = self.x + (x or 0)
+	local y1 = self.y + (y or 0)
 
-	rect(x1, y1, x1 + self.w - 3, y1 + self.h - 3, (colour or 7))
+	rect(x1, y1, x1 + self.w - 1, y1 + self.h - 1, (colour or 7))
 end
 
 function Rectangle:isIntersecting(r)
@@ -141,7 +141,7 @@ function getComponents(w)
 	
 	-- graphics
 
-	-- -- components
+	-- -- sprite
 
 	c.Sprite = w.component(Sprite:new(0, 0))
 
@@ -157,12 +157,24 @@ function getComponents(w)
 	end
 
 
+	-- -- sprite group
+
 	c.SpriteGroup = w.component({})
 
 	function c.new.SpriteGroup(...)
 
 		local sg = c.SpriteGroup({...})
 		return sg
+	end
+
+
+	-- camera
+
+	c.Camera = w.component({})
+
+	function c.new.Camera()
+
+		return c.Camera()
 	end
 
 
@@ -248,10 +260,43 @@ function getComponents(w)
 		end
 	end)
 
+	
+	local function getAvOfPos(ents)
+
+		local totalX = 0
+		local totalY = 0
+		local total = 0
+
+		for _, e in pairs(ents) do
+
+			totalX += e[c.Position].x
+			totalY += e[c.Position].y
+			total += 1
+		end
+
+		if total > 0 then
+
+			return Position:new(
+				totalX / total, totalY / total)
+		else
+			return nil 
+		end
+	end
+
+
+	function c.CameraSystem(getFocus)
+
+		local ents = w.query({c.Position, c.Camera})
+		local focus = getFocus and getFocus(ents) or getAvOfPos(ents)
+		if focus then camera(focus.x - 64, focus.y - 64) end
+	end
+
+
 	function c.GraphicsSystem()
 
 		c.SpriteSystem()
 		c.SpriteGroupSystem()
+		c.CameraSystem()
 	end
 
 
@@ -301,7 +346,6 @@ function getComponents(w)
 			collision = false }
 	end
 
-	local googoo = 0
 
 	c.VelocitySystem = w.system({c.Velocity, c.Position},
 
@@ -336,6 +380,7 @@ function getComponents(w)
 		pos.x = xCol.new
 		pos.y = yCol.new
 	end)
+
 
 	c.GravitySystem = w.system({c.Gravity, c.Velocity},
 

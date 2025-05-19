@@ -35,6 +35,7 @@ local function createCharacter(x, y, startVelocity)
     local e = w.entity()
     e += c.new.Position(x, y)
     e += c.new.Velocity(0, startVelocity or 0)
+    e += c.new.Camera({})
 
     e += c.new.Collision(
         
@@ -66,16 +67,18 @@ local e2 = createCharacter(64, 64 - 32, -64)
 function _update60()
 
     w.update()
+    c.PhysicsSystem(1/60, isSolidFunction)
 end
 
 function _draw()
 
     cls()
 
+    line(0, 128, 128, 128, 7)
+
     c.GraphicsSystem()
     e1[c.Collision]:draw(nil, e1[c.Position].x, e1[c.Position].y)
     e2[c.Collision]:draw(nil, e2[c.Position].x, e2[c.Position].y)
-    c.PhysicsSystem(1/60, isSolidFunction)
 end
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000

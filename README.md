@@ -110,6 +110,12 @@ queues deletion of the entity
     - an array of functions all called when deleted
 
 
+### `Camera`
+focuses the camera on the average of all entities with this component
+
+`new.Camera()`
+
+
 ## `Physics`
 
 ### `Velocity`
@@ -148,6 +154,11 @@ draws all sprites
 
 ### `SpriteGroupSystem()`
 draws all sprite groups
+
+### `CameraSystem([getFocus])`
+focuses the camera on a specific point using the `getFocus` function
+- `getFocus`: function for getting the camera focal point which takes in a list of entities
+    - default: gets the average of all points
 
 
 ## `DeleteSystem()`
