@@ -25,6 +25,12 @@ Creates a new position object
 - x: x coordinate
 - y: y coordinate
 
+### `:distanceSquared(p)`
+returns the distance squared between two points
+
+### `:distance(p)`
+returns the distance between two points. Not as fast as distance squared
+
 
 ## Rectangle
 inherits from position, so uses all the same functions
@@ -44,6 +50,26 @@ returns a new rectangle at the offset
 ### `:isIntersecting(r)`
 checks if this rectangle and another are intersecting
 - `r`: other rectangle
+
+
+## Circle
+inherits from position
+
+### `:new(r, [x, y])`
+creates a new circle object
+- `r`: radius
+
+### `:draw(colour, [x, y])`
+draws the circle filled
+- x, y: draw at x and y using the x and y properties as offset
+    - default: do not draw at x and y
+
+### `:getOffset(x, y)`
+returns a new circle at the offset
+
+### `:isIntersecting(c)`
+checks if this circle and another are intersecting
+- `c`: other circle
 
 
 ## Sprite

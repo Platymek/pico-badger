@@ -5,6 +5,7 @@ __lua__
 
 s = Sprite   :new(0, 0, 0)
 r = Rectangle:new(0, 0, 8, 16)
+c = Circle   :new(4, 16, 0)
 
 sprites = {}
 for i = 1, 3 do
@@ -18,12 +19,19 @@ for i = 1, 3 do
     rectangles[#rectangles+1] = Rectangle:new(-4, -2, 4 + 2 * i, 4 + 2 * i)
 end
 
+circles = {}
+for i = 1, 3 do
+
+    circles[#circles+1] = Circle:new(4 + 2 * i)
+end
+
 function _draw()
 
     cls()
 
     r:draw(2)
     s:draw()
+    c:draw(2)
 
     for i, sprite in ipairs(sprites) do
 
@@ -33,6 +41,11 @@ function _draw()
     for i, rectangle in ipairs(rectangles) do
 
         rectangle:draw(i + 2, i * 8, i * 16)
+    end
+
+    for i, circle in ipairs(circles) do
+
+        circle:draw(i + 2, i * 8 + 16, i * 16)
     end
 end
 __gfx__

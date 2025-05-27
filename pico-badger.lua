@@ -36,6 +36,17 @@ function Position:new(x, y)
 	return p
 end
 
+function Position:distanceSquared(p)
+
+	local xd = self.x - p.x
+	local yd = self.y - p.y
+	return xd * xd + yd * yd
+end
+
+function Position:distance(p)
+
+	return sqrt(self:distanceSquared(p))
+end
 
 -- -- rectangle
 
@@ -85,6 +96,42 @@ function Rectangle:isIntersecting(r)
 		ax2 <= bx1 or bx2 <= ax1
     or  ay2 <= by1 or by2 <= ay1)
 end
+
+
+-- -- circle
+
+Circle = {}
+
+function Circle:new(r, x, y)
+
+	local p = Position:new(x or 0, y or 0)
+
+	setmetatable(p, self)
+	self.__index = self
+
+	local c = {r = r}
+	setmetatable(c, p)
+	p.__index = p
+
+	return c
+end
+
+function Circle:isIntersecting(circle)
+
+    -- r is max distance, d is distance between two circles
+    local r = self.r * self.r + circle.r * circle.r
+    local d = Circle:distanceSquared(circle)
+    return r < d
+end
+
+function Circle:draw(colour, x, y)
+
+	local cx = self.x + (x or 0)
+	local cy = self.y + (y or 0)
+	
+	circfill(cx, cy, self.r, (colour or 7))
+end
+
 
 
 -- -- sprite
