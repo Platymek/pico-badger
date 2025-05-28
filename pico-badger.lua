@@ -48,9 +48,10 @@ function Position:distance(p)
 	return sqrt(self:distanceSquared(p))
 end
 
--- -- rectangle
+-- -- rectangle, overrides Position
 
 Rectangle = {}
+setmetatable(Rectangle, {__index = Position})
 
 function Rectangle:new(x, y, w, h)
     
@@ -80,7 +81,7 @@ function Rectangle:draw(colour, x, y)
 	rect(x1, y1, x1 + self.w - 1, y1 + self.h - 1, (colour or 7))
 end
 
-function Rectangle:isIntersecting(r)
+function Rectangle:isOverlapping(r)
 
 	local ax1 = self.x
 	local ax2 = ax1 + self.w
@@ -98,9 +99,10 @@ function Rectangle:isIntersecting(r)
 end
 
 
--- -- circle
+-- -- circle, overrides Position
 
 Circle = {}
+setmetatable(Circle, {__index = Position})
 
 function Circle:new(r, x, y)
 
@@ -116,12 +118,12 @@ function Circle:new(r, x, y)
 	return c
 end
 
-function Circle:isIntersecting(circle)
+function Circle:isOverlapping(circle)
 
     -- r is max distance, d is distance between two circles
-    local r = self.r * self.r + circle.r * circle.r
-    local d = Circle:distanceSquared(circle)
-    return r < d
+    local r = self.r + circle.r
+    local d = self:distanceSquared(circle)
+    return r * r >= d
 end
 
 function Circle:draw(colour, x, y)
@@ -130,6 +132,12 @@ function Circle:draw(colour, x, y)
 	local cy = self.y + (y or 0)
 	
 	circfill(cx, cy, self.r, (colour or 7))
+end
+
+function Circle:getOffset(x, y)
+
+	return Circle:new(
+	self.r, self.x + (x or 0), self.y + (y or 0))
 end
 
 

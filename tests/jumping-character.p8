@@ -21,7 +21,7 @@ local function isSolidFunction(ent, pos, vel, col)
         local oc = otherEnt[c.Collision]
 
         if col:getOffset(pos.x, pos.y)
-            :isIntersecting(oc:getOffset(op.x, op.y))
+            :isOverlapping(oc:getOffset(op.x, op.y))
         then return true end
 
         end

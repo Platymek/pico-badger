@@ -47,8 +47,8 @@ draws the rectangle outline
 ### `:getOffset(x, y)`
 returns a new rectangle at the offset
 
-### `:isIntersecting(r)`
-checks if this rectangle and another are intersecting
+### `:isOverlapping(r)`
+checks if this rectangle and another are overlapping
 - `r`: other rectangle
 
 
@@ -67,8 +67,8 @@ draws the circle filled
 ### `:getOffset(x, y)`
 returns a new circle at the offset
 
-### `:isIntersecting(c)`
-checks if this circle and another are intersecting
+### `:isOverlapping(c)`
+checks if this circle and another are overlapping
 - `c`: other circle
 
 

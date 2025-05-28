@@ -3,13 +3,24 @@ version 42
 __lua__
 #include ../pico-badger.lua
 
-p    = Position :new(16, 13)
+p    = Position:new(16, 13)
+
 r    = Rectangle:new(0, 0, 16, 16)
 rOff1= r:getOffset(4, 4)
 rOff2= r:getOffset(32, 32)
 
+c    = Circle:new(16, 0, 0)
+cOff1= c:getOffset(4, 4)
+cOff2= c:getOffset(32, 32)
+
+
+-- Position tests
+
 assert(p.x == 16)
 assert(p.y == 13)
+
+
+-- Rectangle tests
 
 assert(r.x == 0)
 assert(r.y == 0)
@@ -24,10 +35,30 @@ assert(rOff1.h == 16)
 assert(rOff2.x == 32)
 assert(rOff2.y == 32)
 
-assert(r:isIntersecting(rOff1))
-assert(not r:isIntersecting(rOff2))
+assert(r:isOverlapping(rOff1))
+assert(not r:isOverlapping(rOff2))
+
+
+-- Circle tests
+
+assert(c.x == 0)
+assert(c.y == 0)
+assert(c.r == 16)
+
+assert(cOff1.x == 4)
+assert(cOff1.y == 4)
+assert(cOff1.r == 16)
+
+assert(cOff2.x == 32)
+assert(cOff2.y == 32)
+
+assert(c:isOverlapping(cOff1))
+assert(not c:isOverlapping(cOff2))
+
+
 
 print("everything\'s working!:D")
+
 __gfx__
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
