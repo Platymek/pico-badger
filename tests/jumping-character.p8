@@ -5,7 +5,7 @@ __lua__
 #include ../pico-badger.lua
 
 local w = pecs()
-c = getComponents(w)
+c = getBadgerComponents(w)
 
 local s = w.entity()
 s += c.new.Position(16, 16)

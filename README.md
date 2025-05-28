@@ -95,7 +95,7 @@ Draws the sprite
 # Components
 All constructors are found in the `.new` table. For example:
 ```lua
-local c = getComponents(world)
+local c = getBadgerComponents(world)
 local e = world.entity()
 e += c.new.Position(3, 12)
 e += c.new.Sprite(4)
@@ -171,6 +171,12 @@ inherits from `Rectangle`.
 
 
 # Systems
+Systems are obtained using the same `getBadgerComponents` function:
+```lua
+local c = getBadgerComponents(world)
+-- ...
+c.SpriteSystem()
+```
 
 ## `GraphicsSystem(getFocus)`
 - `getFocus`: function for camera
@@ -192,13 +198,14 @@ focuses the camera on a specific point using the `getFocus` function
 deletes all entities with Delete component
 
 
-## `PhysicsSystem(dt, isSolid)`
+## `PhysicsSystem(dt, [isSolid])`
 - `dt`: delta time
 - `isSolid`: custom function placed in the velocity system to check for solid somethings. Parameters:
     - `ent`: the entity that is colliding
     - `pos`: position
     - `vel`: velocity
     - `rect`: rectangle of collision
+    - default: is just `nil` and velocity is simplified
     
 calls the following systems:
 

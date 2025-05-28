@@ -172,7 +172,7 @@ end
 
 -- components
 
-function getComponents(w)
+function getBadgerComponents(w)
 
 	local c = {}
 	c.new = {}
