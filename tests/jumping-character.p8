@@ -39,7 +39,7 @@ local function createCharacter(x, y, startVelocity)
 
     e += c.new.Collision(
         
-        function(vel) 
+        function(vel)
 
             if vel.y != 0 then 
 

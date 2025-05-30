@@ -1,15 +1,15 @@
 
 -- functions
 
-function call(funcs)
+function call(funcs, ...)
 
 	if type(funcs) == "function" then
 
-		funcs()
+		funcs(...)
 	else
 		for _, f in ipairs(funcs) do
 
-			f()
+			f(...)
 		end
 	end
 end
@@ -22,7 +22,6 @@ end
 
 
 -- classes
-
 
 -- -- position
 
@@ -47,6 +46,7 @@ function Position:distance(p)
 
 	return sqrt(self:distanceSquared(p))
 end
+
 
 -- -- rectangle, overrides Position
 
@@ -424,12 +424,12 @@ function getBadgerComponents(w)
 
 		if xCol.collision then 
 
-			if col.onCollide then col.onCollide(Position:new(vel.x, 0)) end
+			if col.onCollide then call(col.onCollide, Position:new(vel.x, 0)) end
 		end
 
 		if yCol.collision then 
 
-			if col.onCollide then col.onCollide(Position:new(0, vel.y)) end
+			if col.onCollide then call(col.onCollide, Position:new(0, vel.y)) end
 		end
 
 		pos.x = xCol.new
