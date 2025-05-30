@@ -123,15 +123,22 @@ function Circle:isOverlapping(circle)
     -- r is max distance, d is distance between two circles
     local r = self.r + circle.r
     local d = self:distanceSquared(circle)
-    return r * r >= d
+    return abs(r * r) > abs(d)
 end
 
-function Circle:draw(colour, x, y)
+function Circle:draw(colour, x, y, notFill)
 
-	local cx = self.x + (x or 0)
-	local cy = self.y + (y or 0)
-	
-	circfill(cx, cy, self.r, (colour or 7))
+	local cx1 = self.x + (x or 0) - self.r
+	local cy1 = self.y + (y or 0) - self.r
+	local cx2 = self.x + (x or 0) + self.r - 1
+	local cy2 = self.y + (y or 0) + self.r - 1
+
+	if notFill then
+		
+		oval(cx1, cy1, cx2, cy2, (colour or 7))
+	else
+		ovalfill(cx1, cy1, cx2, cy2, (colour or 7))
+	end
 end
 
 function Circle:getOffset(x, y)
@@ -259,7 +266,6 @@ function getBadgerComponents(w)
 		})
 
 		setmetatable(col, {__index = rect})
-		stop(col.x)
 
 		return col
 	end
