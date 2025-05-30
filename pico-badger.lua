@@ -251,12 +251,15 @@ function getBadgerComponents(w)
 
 	function c.new.Collision(onCollide, x, y, w, h)
 		
-		local r = Rectangle:new(x or -4, y or -4, w or 8, h or 8)
-		local col = c.Collision(r)
-		col.onCollide = onCollide
+		local rect = Rectangle:new(x or -4, y or -4, w or 8, h or 8)
 
-		setmetatable(col, r)
-		r.__index = r
+		local col = c.Collision({
+			
+			onCollide = onCollide
+		})
+
+		setmetatable(col, {__index = rect})
+		stop(col.x)
 
 		return col
 	end
