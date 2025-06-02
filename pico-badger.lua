@@ -224,8 +224,24 @@ function getBadgerComponents(w)
 	c.SpriteGroup = w.component({})
 
 	function c.new.SpriteGroup(...)
+		
+		local sg = c.SpriteGroup({
 
-		local sg = c.SpriteGroup({...})
+			sprs = {},
+			
+			add = function(self, s)
+			
+				self.sprs[s] = s
+			end,
+
+			remove = function(self, s)
+
+				self.sprs[s] = nil
+			end,
+		})
+
+		-- add all sprites to the group and return
+		for _, s in pairs({...}) do sg:add(s) end
 		return sg
 	end
 
@@ -318,7 +334,7 @@ function getBadgerComponents(w)
 		local pos = e[c.Position]
 		local sg  = e[c.SpriteGroup]
 
-		for _, s in ipairs(sg) do
+		for _, s in pairs(sg.sprs) do
 
 			s:draw(pos.x, pos.y)
 		end
