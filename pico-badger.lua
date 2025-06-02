@@ -121,9 +121,9 @@ end
 function Circle:isOverlapping(circle)
 
     -- r is max distance, d is distance between two circles
-    local r = self.r + circle.r
+    local r = self.r * self.r + circle.r * circle.r
     local d = self:distanceSquared(circle)
-    return abs(r * r) > abs(d)
+    return abs(r) > abs(d)
 end
 
 function Circle:draw(colour, x, y, notFill)
