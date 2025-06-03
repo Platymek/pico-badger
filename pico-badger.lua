@@ -56,13 +56,10 @@ setmetatable(Rectangle, {__index = Position})
 function Rectangle:new(x, y, w, h)
     
 	local p = Position:new(x, y)
-
-	setmetatable(p, self)
-	self.__index = self
-
 	local r = {w = w, h = h}
-	setmetatable(r, p)
-	p.__index = p
+
+	setmetatable(p, {__index = self})
+	setmetatable(r, {__index = p})
 
 	return r
 end
@@ -73,12 +70,17 @@ function Rectangle:getOffset(x, y)
 	self.x + (x or 0), self.y + (y or 0), self.w, self.h)
 end
 
-function Rectangle:draw(colour, x, y)
+function Rectangle:draw(colour, x, y, fill)
 
 	local x1 = self.x + (x or 0)
 	local y1 = self.y + (y or 0)
 
-	rect(x1, y1, x1 + self.w - 1, y1 + self.h - 1, (colour or 7))
+	if fill then
+
+		rectfill(x1, y1, x1 + self.w - 1, y1 + self.h - 1, (colour or 7))
+	else
+		rect(x1, y1, x1 + self.w - 1, y1 + self.h - 1, (colour or 7))
+	end
 end
 
 function Rectangle:isOverlapping(r)
