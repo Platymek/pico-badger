@@ -14,6 +14,16 @@ function call(funcs, ...)
 	end
 end
 
+function asTable(val)
+
+	if type(val) ~= "table" then
+
+		return {val}
+	else
+		return val
+	end
+end
+
 function moveToward(from, to, delta)
 
     if abs(to - from) <= delta then return to end
@@ -260,11 +270,25 @@ function getBadgerComponents(w)
 
 	-- delete
 
-	c.Delete = w.component({onDelete = nil})
+	c.Delete = w.component()
+	c.OnDel = w.component({onDelete = nil})
 
-	function c.new.Delete(onDelete)
+	function c.tryDelete(e)
 
-		return c.Delete({onDelete = onDelete})
+		if not e[c.Delete] then e += c.Delete() end
+	end
+
+	function c.new.OnDel(onDelete)
+
+		return c.OnDel({onDelete = onDelete})
+	end
+
+	function c.addOnDel(e, onDelete)
+
+		local od = e[c.OnDel]
+
+		if not od then e += c.new.OnDel(onDelete) 
+		else od.onDelete[#od.onDelete + 1] = onDelete end
 	end
 
 
@@ -388,7 +412,11 @@ function getBadgerComponents(w)
 
 	function (e)
 		
-		call(e[c.Delete].onDelete)
+		if e[c.OnDel] and e[c.OnDel].onDelete then
+			
+			call(e[c.OnDel].onDelete, e)
+		end
+
 		w.queue(function() w.remove(e) end)
 	end)
 

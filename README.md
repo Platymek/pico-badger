@@ -1,15 +1,14 @@
-
 # dependecies
 - [pecs](https://github.com/jesstelford/pecs)
     - for tests: `/pecs/pecs.lua`
 # details
 - square brackets means `nil`able
 # Functions
-
 ## `call(funcs)`
 calls a function or a list of function, checking type
 - `funcs`: a function or a table of functions
-
+## `asTable(val)`
+returns a the value, `val` in a table if it is not already a table
 ## `moveToward(from, to, delta)`
 interpolates a value linearly, from `from` to `to`, with a change of `delta`
 # classes
