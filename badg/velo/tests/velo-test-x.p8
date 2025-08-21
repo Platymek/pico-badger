@@ -40,6 +40,7 @@ function _update60()
 
     updateFlipped()
     controlBoost()
+    controlVelo()
 end
 
 function _draw()
@@ -47,7 +48,6 @@ function _draw()
     cls(12)
     spr(1, vect.x, vect.y, 1, 1, flipped)
     print("velocity: " .. velo, 4, 4, 1)
-    controlVelo()
 end
 
 
