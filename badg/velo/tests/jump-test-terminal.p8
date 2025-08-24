@@ -12,10 +12,11 @@ initial = Vect({
 
 jump = JumpProp({
 
-    timeToPeak = 0.5,
+    timeToPeak = 0.6,
     timeToFall = 0.4,
     maxHeight = 48,
     minHeight = 8,
+    terminal = 128,
 })
 
 vect = Vect(initial)
@@ -55,6 +56,7 @@ function _draw()
     spr(1, vect.x, vect.y)
     print("jump velocity: " .. jump.jumpVelo, 4, 4, 1)
     print("jump min velocity: " .. jump.minVelo)
+    print("terminal: " .. jump.terminal)
     print("velocity: " .. velo)
     print("height: " .. (initial.y - height))
     print("gravity: " .. (velo > 0 and jump.fallGrav or jump.jumpGrav))

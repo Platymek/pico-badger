@@ -3,9 +3,9 @@ JumpProp = {
 
     fall = function(self, p)
 
-        if p.currVelo > 0 then
+        if isFall(p.currVelo) then
 
-            return p.currVelo + self.fallGrav * p.dt
+            return min(p.currVelo + self.fallGrav * p.dt, self.terminal)
         else
             return p.currVelo + self.jumpGrav * p.dt
         end
@@ -22,13 +22,12 @@ setmetatable(JumpProp, {
         local j = {
 
             jumpGrav = getJumpGrav(p),
-
             fallGrav = p.terminal and getFallGravTerminal(p) or getFallGrav(p),
-            --terminal = p.terminal or getTerminal(j),
         }
 
         j.jumpVelo = getJumpVelo({ jumpGrav = j.jumpGrav, maxHeight = p.maxHeight })
-        j.minVelo = p.minHeight and getMinJumpVelo({ jumpGrav = j.jumpGrav, minHeight = p.minHeight }) or 0,
+        j.minVelo = p.minHeight and getMinJumpVelo({ jumpGrav = j.jumpGrav, minHeight = p.minHeight }) or 0
+        j.terminal = p.terminal or getTerminal({ fallGrav = j.fallGrav, timeToFall = p.timeToFall })
 
         setmetatable(j, {
 
@@ -64,12 +63,13 @@ end
 
 function getFallGravTerminal(p)
 
-    return (p.terminal ^ 2) / 2 * (p.terminal * p.timeToFall - p.maxHeight)
+    assert(p.terminal * p.timeToFall > p.maxHeight, "terminal velocity must be above\n" .. p.maxHeight / p.timeToFall)
+    return (1 / (2 * (p.terminal * p.timeToFall - p.maxHeight))) * p.terminal * p.terminal
 end
 
 function getJumpVelo(p)
 
-    return sqrt(2 * p.jumpGrav * p.maxHeight)
+    return sqrt(2) * sqrt(p.jumpGrav) * sqrt(p.maxHeight)
 end
 
 function getTerminal(p)
@@ -79,5 +79,10 @@ end
 
 function getMinJumpVelo(p)
 
-    return sqrt(2 * p.jumpGrav * p.minHeight)
+    return sqrt(2) * sqrt(p.jumpGrav) * sqrt(p.minHeight)
+end
+
+function isFall(velo)
+
+    return velo > 0
 end
