@@ -35,7 +35,7 @@ function _update60()
             height = initial.y
         end
     else
-        velo = jump:fall({ currVelo = velo, dt = dt })
+        velo = jump:fall({ velo = velo, dt = dt })
         
         if not (btn(4) or btn(5) or btn(2)) and velo < -jump.minVelo then velo = -jump.minVelo end
     end

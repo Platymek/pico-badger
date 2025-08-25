@@ -1,16 +1,5 @@
 
-JumpProp = {
-
-    fall = function(self, p)
-
-        if isFall(p.currVelo) then
-
-            return min(p.currVelo + self.fallGrav * p.dt, self.terminal)
-        else
-            return p.currVelo + self.jumpGrav * p.dt
-        end
-    end
-}
+JumpProp = {}
 
 setmetatable(JumpProp, {
     
@@ -19,24 +8,31 @@ setmetatable(JumpProp, {
         assert(p.timeToPeak, p.timeToFall, p.maxHeight, 
             "timeToPeak, timeToFall, and maxHeight must be provided")
 
-        local j = {
+        p.jumpGrav = getJumpGrav(p)
+        p.fallGrav = p.terminal and getFallGravTerminal(p) or getFallGrav(p)
+        p.jumpVelo = getJumpVelo({ jumpGrav = p.jumpGrav, maxHeight = p.maxHeight })
+        p.minVelo = p.minHeight and getMinJumpVelo({ jumpGrav = p.jumpGrav, minHeight = p.minHeight }) or 0
+        p.terminal = p.terminal or getTerminal({ fallGrav = p.fallGrav, timeToFall = p.timeToFall })
+        p.fall = fall
 
-            jumpGrav = getJumpGrav(p),
-            fallGrav = p.terminal and getFallGravTerminal(p) or getFallGrav(p),
-        }
-
-        j.jumpVelo = getJumpVelo({ jumpGrav = j.jumpGrav, maxHeight = p.maxHeight })
-        j.minVelo = p.minHeight and getMinJumpVelo({ jumpGrav = j.jumpGrav, minHeight = p.minHeight }) or 0
-        j.terminal = p.terminal or getTerminal({ fallGrav = j.fallGrav, timeToFall = p.timeToFall })
-
-        setmetatable(j, {
+        setmetatable(p, {
 
             __index = JumpProp
         })
 
-        return j
+        return p
     end
 })
+
+function fall(self, p)
+
+    if isFall(p.velo) then
+
+        return min(p.velo + self.fallGrav * p.dt, self.terminal)
+    else
+        return p.velo + self.jumpGrav * p.dt
+    end
+end
 
 function getGrav(p)
 

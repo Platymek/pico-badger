@@ -17,7 +17,11 @@ setmetatable(VeloProp, {
             maintain = p.maintain,
         }
 
-        v.__index = VeloProp
+        setmetatable(v, {
+
+            __index = VeloProp
+        })
+        
         return v
     end
 })
