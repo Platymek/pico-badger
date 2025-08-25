@@ -15,7 +15,7 @@ function xcon(p)
 
     -- if velocity is 0, accelerate in a direction
     if velo == 0 and contDire ~= 0 then
-        return accel(velo, p.dt, p.veloProp) * contDire 
+        return accel({velo=velo, dt=p.dt, veloProp=p.veloProp}) * contDire 
     end
 
     return accelInDirection(
@@ -26,14 +26,15 @@ end
 function accelInDirection(p)
 
     assert(p.velo and p.dt and p.direction)
+    local vp = {velo=p.velo, dt=p.dt, veloProp=p.veloProp}
 
     if p.direction < 0 then return 
-        rever(p.velo, p.dt, p.veloProp) end
+        rever(vp) end
 
     if p.direction > 0 then return 
-        accel(p.velo, p.dt, p.veloProp) end
+        accel(vp) end
 
-    return decel(p.velo, p.dt, p.veloProp)
+    return decel(vp)
 end
 
 function getDirection(p)

@@ -84,9 +84,9 @@ function right()
 
     if velo >= 0 then
 
-        velo = accel(velo, dt, veloProp)
+        velo = accel({velo=velo, dt=dt, veloProp=veloProp})
     else
-        velo = -rever(-velo, dt, veloProp)
+        velo = -rever({velo=-velo, dt=dt, veloProp=veloProp})
     end
 end
 
@@ -95,9 +95,9 @@ function left()
 
     if velo > 0 then
 
-        velo = rever(velo, dt, veloProp)
+        velo = rever({velo=velo, dt=dt, veloProp=veloProp})
     else
-        velo = -accel(-velo, dt, veloProp)
+        velo = -accel({velo=-velo, dt=dt, veloProp=veloProp})
     end
 end
 
@@ -106,9 +106,9 @@ function stop()
 
     if velo >= 0 then
 
-        velo = decel(velo, dt, veloProp)
+        velo = decel({velo=velo, dt=dt, veloProp=veloProp})
     else
-        velo = -decel(-velo, dt, veloProp)
+        velo = -decel({velo=-velo, dt=dt, veloProp=veloProp})
     end
 end
 
