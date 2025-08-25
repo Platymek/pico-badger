@@ -1,0 +1,99 @@
+pico-8 cartridge // http://www.pico-8.com
+version 42
+__lua__
+#include ../../../math.lua
+
+#include ../../velo.lua
+#include ../xcon.lua
+
+
+local vect = Vect({
+
+    x = 16,
+    y = 64
+})
+
+
+local vp = {
+
+    accel = 160,
+    decel = 48,
+    max = 16 * 4,
+    maintain = 16,
+}
+
+vpfScale = 2
+
+local veloPropSlow = VeloProp(vp)
+local veloPropFast = VeloProp({
+
+    accel = vp.accel * vpfScale,
+    decel = vp.decel,
+    max = vp.max * vpfScale,
+})
+
+local veloProp = veloPropSlow
+
+
+local velo = 0
+local dt = 1 / 60
+local flipped = false
+local boost = false
+
+
+function _update60()
+
+    vect.x += velo * dt
+
+    updateFlipped()
+    controlBoost()
+    controlVelo()
+end
+
+function _draw()
+
+    cls(12)
+    spr(1, vect.x, vect.y, 1, 1, flipped)
+    print("velocity: " .. velo, 4, 4, 1)
+end
+
+
+function controlVelo()
+
+    velo = xcon({
+
+        velo = velo,
+        dt = dt,
+        veloProp = boost and veloPropFast or veloPropSlow,
+
+        left = btn(0),
+        right = btn(1),
+
+        fastFlip = true,
+        fastFlipThreshold = vp.max,
+    })
+end
+
+
+function controlBoost()
+
+    boost = btn(4) or btn(5)
+end
+
+
+function updateFlipped()
+
+    if velo < 0 and not flipped then flipped = false
+    elseif velo > 0 and flipped then flipped = true
+    end
+end
+
+__gfx__
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00700700099990000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+000770004aaaa9000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0007700049aacc990000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+0070070041aaaa190000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+000000001d1991d10000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+00000000010000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
