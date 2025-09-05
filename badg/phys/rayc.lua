@@ -5,8 +5,9 @@ function rayc(p)
 
     local startp = flr(p.initPosi)
     local endp = flr(p.initPosi + p.dist)
+    local noColl = { coll = false, posi = p.initPosi + p.dist }
 
-    if startp == endp then return { coll = false, posi = endp } end
+    if startp == endp then return noColl end
     local step = sgn(p.dist)
 
     for i = startp, endp, step do
@@ -26,5 +27,5 @@ function rayc(p)
         end
     end
 
-    return { coll = false, posi = endp }
+    return noColl
 end
