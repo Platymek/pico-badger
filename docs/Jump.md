@@ -15,7 +15,7 @@ properties (on top of parameters):
 - `jumpVelo`: initial velocity on jump
 - `minVelo`: initial velocity of smallest jump
 - `fall`: the `fall` function, as seen below
-# Fall Function: `JumpProp:fall`
+## Fall Function: `JumpProp:fall`
 `fall(self, { velo, dt })`
 - `self`: a `JumpProp` table
 - `velo`: current velocity
