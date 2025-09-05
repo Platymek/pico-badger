@@ -69,13 +69,11 @@ function Rect:pointsOverGrid(p)
     local gx2 = g(self.x2, p.x)
     local gy2 = g(self.y2, p.y)
 
-    local vect = function(p) return Vect and Vect{p} or p end
     local points = {}
-
     for x = gx1, gx2 do
         for y = gy1, gy2 do
 
-            points[#points + 1] = vect{ x = x, y = y }
+            points[#points + 1] = { x = x, y = y }
         end
     end
 
@@ -90,10 +88,10 @@ end
 function Rect:overRect(p)
 
     return not(
-        self.x2 <= p.shape.x1 
-    or  self.x1 >= p.shape.x2
-    or  self.y2 <= p.shape.y1 
-    or  self.y1 >= p.shape.y2)
+        (self.x2 + (p.x or 0)) <= p.shape.x1 
+    or  (self.x1 + (p.x or 0)) >= p.shape.x2
+    or  (self.y2 + (p.y or 0)) <= p.shape.y1 
+    or  (self.y1 + (p.y or 0)) >= p.shape.y2)
 end
 
 Rect.overs = {
