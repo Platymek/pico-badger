@@ -11,9 +11,9 @@ __call = function (s, p)
         wHalf = function(s) return s.w / 2 end,
         hHalf = function(s) return s.h / 2 end,
         x1 = function(s) return s.pos.x - s.wHalf end,
-        x2 = function(s) return s.pos.x + s.wHalf end,
+        x2 = function(s) return s.pos.x + s.wHalf - 1 end,
         y1 = function(s) return s.pos.y - s.hHalf end,
-        y2 = function(s) return s.pos.y + s.hHalf end,
+        y2 = function(s) return s.pos.y + s.hHalf - 1 end,
         shape = "rectangle",
     }
 
@@ -36,7 +36,7 @@ function Rect:draw(p)
 
     local f = (p.fill == false) and rect or rectfill
     f(
-        self.x1 + (p.x or 0), 
+        self.x1 + (p.x or 0),
         self.y1 + (p.y or 0), 
         self.x2 + (p.x or 0), 
         self.y2 + (p.y or 0),
