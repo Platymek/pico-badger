@@ -4,7 +4,8 @@ Rect = {}
 setmetatable(Rect, {
 __call = function (s, p)
 
-    assert(p.pos and p.w and p.h)
+    assert(p.w and p.h)
+    if not p.pos then p.pos = {x = 0, y = 0} end
 
     local r = {
 
@@ -48,8 +49,8 @@ function Rect:off(p)
 
     local pos = {
 
-        x = self.pos.x + (p.x or p.pos.x or 0),
-        y = self.pos.y + (p.y or p.pos.y or 0)
+        x = self.pos.x + (p.x or 0),
+        y = self.pos.y + (p.y or 0)
     }
 
     return Rect {
