@@ -5,9 +5,9 @@ function State(p)
 
         into = p.into,
         out = p.out,
-        can = p.can,
-        is = p.is,
-        props = p.props,
+        can = p.can or {},
+        is = p.is or {},
+        props = p.props or {},
         isState = true
     } or {}
 end
@@ -20,6 +20,10 @@ setmetatable(StateMachine, {
 
         local def = p.default or State{}
         local cur = p.current or State{}
+
+        local cant = {}
+        local isnt = {}
+
         if def.into then 
             def.into() end
         if cur.into then 
@@ -32,13 +36,26 @@ setmetatable(StateMachine, {
             cur = s
             if cur.into then
                 cur.into() end
+            
+            cant = {}
+            for i, v in pairs(cur.can)
+            do
+                if v == false then
+                    cant[i] = true end
+            end
+            isnt = {}
+            for i, v in pairs(cur.is)
+            do
+                if v == false then
+                    isnt[i] = true end
+            end
         end
 
-        local function can()
+        local function can(p)
 
             local ns -- new state
             repeat
-                ns = checkCan({cur.can, def.can}, p)
+                ns = checkCan({cur.can, def.can}, cant, p)
                 if ns
                 then
                     if not ns.isState then
@@ -62,7 +79,7 @@ setmetatable(StateMachine, {
             __call = function(self, p)
 
                 can(p)
-                updateIs({cur.is, def.is}, p)
+                updateIs({cur.is, def.is}, isnt, p)
             end,
 
             __index = function(self, i)
@@ -77,14 +94,15 @@ setmetatable(StateMachine, {
     end
 })
 
-function checkCan(cans, p)
+function checkCan(canTable, cantTable, p)
 
-    for _, can in ipairs(cans)
+    for i, can in ipairs(canTable)
     do
         local ns -- new state
         if type(can) == "table" then
-            ns = checkCan(can, p)
-        elseif type(can) == "function" then
+            ns = checkCan(can, cantTable, p)
+        elseif type(can) == "function" 
+            and not cantTable[can] then
             ns = can(dt)
         end
         if ns then 
@@ -92,13 +110,14 @@ function checkCan(cans, p)
     end
 end
 
-function updateIs(iss, p)
+function updateIs(isTable, isntTable, p)
 
-    for i, is in ipairs(iss)
+    for i, is in ipairs(isTable)
     do
         if type(is) == "table" then
-            updateIs(is, p)
-        elseif type(is) == "function" then
+            updateIs(is, isntTable, p)
+        elseif type(is) == "function" 
+            and not isntTable[is] then
             is(p)
         end
     end
