@@ -43,7 +43,7 @@ function IMT:__call(inputs)
 
         if trigged[inp] 
         then
-            if inp.onCheck and inp:onCheck() == false then
+            if inp.onCheck and inp:onCheck() then
                 deTrig(inp) end
             return true
         end
