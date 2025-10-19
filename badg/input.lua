@@ -4,20 +4,15 @@ IMT = {}
 
 function IMT:__call(inputs)
 
-    local untrig = {}
     local trigged = {}
-    for _, v in ipairs(inputs) do
-        untrig[v] = true end
 
     local function trig(inp)
         trigged[inp] = true
-        untrig[inp] = nil
         if inp.onTrig then
             inp:onTrig(p) end
     end
 
     local function deTrig(inp)
-        untrig[inp] = true
         trigged[inp] = nil
         if inp.onDeTrig then
             inp:onDeTrig(p) end
@@ -30,8 +25,8 @@ function IMT:__call(inputs)
         local toTrig = {}
         local toDeTrig = {}
 
-        for inp, _ in pairs(untrig) do
-            if inp.trig and inp:trig(p) then
+        for _, inp in ipairs(inputs) do
+            if not trigged[inputs] and inp.trig and inp:trig(p) then
                 toTrig[#toTrig + 1] = inp end end
 
         for inp, _ in pairs(trigged) do

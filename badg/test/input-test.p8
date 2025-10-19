@@ -5,8 +5,6 @@ __lua__
 #include ../input.lua
 
 r = {pos = {x = 64, y = 64}, w = 8, h = 8}
-color = 8
-
 
 down = {color = 3}
 
@@ -16,7 +14,7 @@ function down:deTrig()
     return not btn(4) end
 
 
-pressed = {color = 10, down = false}
+pressed = {down = false}
 
 function pressed:trig()
 
@@ -30,7 +28,7 @@ function pressed:trig()
 end
 
 
-released = {color = 12, down = false}
+released = {down = false}
 
 function released:trig()
 
@@ -44,7 +42,7 @@ function released:trig()
 end
 
 
-held = {color = 11, tLimit = 0.2, t = 0}
+held = {color = 2, tLimit = 0.2, t = 0}
 
 function held:trig(p)
 
@@ -62,7 +60,8 @@ function held:deTrig()
     return not btn(4) end
 
 
-input = Input{down, held, pressed, released}
+input = Input{down, held, pressed}
+input[#input + 1] = released
 
 function _update()
 
@@ -71,12 +70,10 @@ end
 
 function _draw()
 
-    cls(1)
-    rectfill(r.pos.x - r.w, r.pos.y - r.h, r.pos.x + r.w, r.pos.y + r.h, color)
-
-    color = 8
+    color = 1
     for _, inp in ipairs(input) do
         if input[inp] then color = inp.color or 7 end end
+    cls(color)
 end
 
 __gfx__
