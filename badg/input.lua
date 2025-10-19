@@ -20,17 +20,17 @@ function IMT:__call(inputs)
 
     local im = {}
 
-    function im:__call(p)
+    function im:__call(...)
 
         local toTrig = {}
         local toDeTrig = {}
 
         for _, inp in ipairs(inputs) do
-            if not trigged[inputs] and inp.trig and inp:trig(p) then
+            if not trigged[inputs] and inp.trig and inp:trig(...) then
                 toTrig[#toTrig + 1] = inp end end
 
         for inp, _ in pairs(trigged) do
-            if (inp.deTrig and inp:deTrig(p)) or not inp.deTrig then
+            if (inp.deTrig and inp:deTrig(...)) or not inp.deTrig then
                 toDeTrig[#toDeTrig + 1] = inp end end
 
         for _, inp in ipairs(toTrig) do

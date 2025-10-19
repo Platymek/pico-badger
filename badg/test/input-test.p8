@@ -44,10 +44,10 @@ end
 
 held = {color = 2, tLimit = 0.2, t = 0}
 
-function held:trig(p)
+function held:trig(dt)
 
     if btn(4) then
-        self.t += p.dt
+        self.t += dt
     else
         self.t = 0
     end
@@ -65,7 +65,7 @@ input[#input + 1] = released
 
 function _update()
 
-    input{dt=1/30}
+    input(1/30)
 end
 
 function _draw()
