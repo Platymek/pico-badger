@@ -9,13 +9,13 @@ function IMT:__call(inputs)
     local function trig(inp)
         trigged[inp] = true
         if inp.onTrig then
-            inp:onTrig(p) end
+            inp:onTrig() end
     end
 
     local function deTrig(inp)
         trigged[inp] = nil
         if inp.onDeTrig then
-            inp:onDeTrig(p) end
+            inp:onDeTrig() end
     end
 
     local im = {}
