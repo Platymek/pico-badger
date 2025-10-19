@@ -2,12 +2,13 @@ simple velocity in one dimension. Suited for x axis velocity
 # Velocity Properties: `VeloProp`
 properties for velocity used by velocity functions
 
-`VeloProp({ accel, decel, max, [min], [maintain] })`
-- `accel`: acceleration
+`VeloProp({ accel, decel, max, [min], [maintain], [insta] })`
+- `accel`: acceleration. Optional if `insta` is `false`
 - `decel`: deceleration
 - `max`: max speed
 - `min`: minimum speed. Default: `0`
-- `maintain`: the deceleration when trying to accelerate above the max speed. Default: the velocity is snapped to the max speed
+- `maintain`: the deceleration when trying to accelerate above the max speed. Default: `decel`
+- `insta`: instant max velocity
 
 all these properties are public
 # Acceleration Functions: `accel`, `decel` and `rever`
