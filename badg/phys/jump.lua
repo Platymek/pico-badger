@@ -15,6 +15,11 @@ setmetatable(JumpProp, {
         p.terminal = p.terminal or getTerminal({ fallGrav = p.fallGrav, timeToFall = p.timeToFall })
         p.fall = fall
 
+        function p:getJumpVelo(p2)
+
+            return getJumpVelo{ jumpGrav = p.jumpGrav, maxHeight = p2.height }
+        end
+
         setmetatable(p, {
 
             __index = JumpProp
