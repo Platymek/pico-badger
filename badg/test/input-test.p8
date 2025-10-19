@@ -16,7 +16,7 @@ function down:deTrig()
     return not btn(4) end
 
 
-pressed = {color = 3, down = false}
+pressed = {color = 10, down = false}
 
 function pressed:trig()
 
@@ -28,9 +28,6 @@ function pressed:trig()
     if not btn(4) then
         self.down = false end
 end
-
-function pressed:deTrig()
-    return true end
 
 
 released = {color = 12, down = false}
@@ -45,9 +42,6 @@ function released:trig()
     if btn(4) then
         self.down = true end
 end
-
-function released:deTrig()
-    return true end
 
 
 held = {color = 11, tLimit = 0.2, t = 0}
@@ -68,7 +62,7 @@ function held:deTrig()
     return not btn(4) end
 
 
-input = Input{down, pressed, released, held}
+input = Input{down, held, pressed, released}
 
 function _update()
 

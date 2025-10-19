@@ -35,7 +35,7 @@ function IMT:__call(inputs)
                 toTrig[#toTrig + 1] = inp end end
 
         for inp, _ in pairs(trigged) do
-            if inp.deTrig and inp:deTrig(p) then
+            if (inp.deTrig and inp:deTrig(p)) or not inp.deTrig then
                 toDeTrig[#toDeTrig + 1] = inp end end
 
         for _, inp in ipairs(toTrig) do
